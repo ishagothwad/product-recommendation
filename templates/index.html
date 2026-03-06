@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}ShopSmart - AI Product Recommendations{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Search -->
+    <section class="hero-search">
+        <h1>Discover Products for You</h1>
+        <p class="mb-0 opacity-90">AI-powered recommendations for beauty, care & wellness</p>
+        <form action="{{ url_for('recommendations') }}" method="post" class="search-form d-flex">
+            <input type="text" name="prod" class="form-control search-input" placeholder="Search for beauty, care, wellness…" required aria-label="Search products">
+            <button type="submit" class="btn btn-dark search-btn">
+                <i class="fas fa-search"></i> Search
+            </button>
+        </form>
+    </section>
+
+    {% if signup_message %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ signup_message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+
+    {% if error == 'username_exists' %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>Username already exists. Please choose a different username.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+
+    {% if error == 'invalid_credentials' %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>Invalid username or password. Please try again.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+
+    {% if error == 'email_exists' %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>Email already exists. Please use a different email.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+
+    {% if error == 'missing_fields' %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>Please fill in all required fields.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+
+    {% if error == 'signup_failed' %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>Account creation failed. Please try again.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+
+    {% if redirect_to == 'checkout' %}
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <i class="fas fa-info-circle me-2"></i>Please sign in to proceed to checkout.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                const modal = new bootstrap.Modal(document.getElementById('signinModal'));
+                modal.show();
+            }, 500);
+        });
+    </script>
+    {% endif %}
+
+    <!-- Quick link -->
+    <div class="text-center mb-4">
+        <a href="{{ url_for('main') }}" class="btn btn-outline-primary btn-lg">
+            <i class="fas fa-compass me-2"></i> Explore Recommendations
+        </a>
+    </div>
+
+    <!-- Trending Products -->
+    <h2 class="section-title">Trending Products</h2>
+    <div class="row g-4">
+        {% for index, product in trending_products.iterrows() %}
+        {% set img_url = (product.get('ImageURL') or '').split('|')[0].strip() or random_product_image_urls[index] %}
+        <div class="col-lg-3 col-md-4 col-sm-6">
+            <div class="card product-card h-100">
+                <div class="card-img-wrapper">
+                    <img src="{{ img_url }}" class="card-img-top" alt="{{ product['Name'] }}" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ truncate(product['Name'], 40) }}</h5>
+                    <p class="card-brand">{{ product['Brand'] }}</p>
+                    <p class="card-price mb-2">₹{{ random_price }}</p>
+                    <button type="button" class="btn btn-primary btn-add-cart add-to-cart"
+                        data-id="{{ index }}"
+                        data-name="{{ product['Name'] }}"
+                        data-brand="{{ product['Brand'] }}"
+                        data-price="{{ random_price }}"
+                        data-image="{{ img_url }}">
+                        <i class="fas fa-cart-plus me-1"></i> Add to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

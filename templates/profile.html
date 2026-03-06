@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile - ShopSmart{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="section-title mb-4"><i class="fas fa-user-circle me-2"></i> My Profile</h1>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="checkout-card mb-4">
+                <h5 class="mb-4"><i class="fas fa-user me-2 text-primary"></i> Account Information</h5>
+                
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label text-muted">Username</label>
+                        <p class="fw-bold">{{ session.get('username', 'N/A') }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-muted">Email</label>
+                        <p class="fw-bold">{{ session.get('email', 'N/A') }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checkout-card">
+                <h5 class="mb-4"><i class="fas fa-map-marker-alt me-2 text-primary"></i> Saved Address</h5>
+                
+                {% if session.get('last_order') and session.get('last_order').get('shipping') %}
+                {% set saved_address = session.get('last_order').get('shipping') %}
+                <div class="bg-light rounded-3 p-3">
+                    <p class="mb-1"><strong>{{ saved_address.full_name }}</strong></p>
+                    <p class="mb-1 text-muted">{{ saved_address.address_line }}</p>
+                    <p class="mb-1 text-muted">{{ saved_address.city }}, {{ saved_address.state }} - {{ saved_address.pincode }}</p>
+                    <p class="mb-0 text-muted"><i class="fas fa-phone me-1"></i>{{ saved_address.contact }}</p>
+                </div>
+                <p class="small text-muted mt-2 mb-0">
+                    <i class="fas fa-info-circle me-1"></i> Your last used address is shown here. Update it during checkout.
+                </p>
+                {% else %}
+                <p class="text-muted">No saved address. Your address will be saved after your first order.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="checkout-card">
+                <h5 class="mb-3">Quick Actions</h5>
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('orders') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-box me-2"></i> My Orders
+                    </a>
+                    <a href="{{ url_for('cart') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-shopping-cart me-2"></i> My Cart
+                    </a>
+                    <a href="{{ url_for('main') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-search me-2"></i> Browse Products
+                    </a>
+                    <hr>
+                    <a href="{{ url_for('logout') }}" class="btn btn-danger">
+                        <i class="fas fa-sign-out-alt me-2"></i> Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

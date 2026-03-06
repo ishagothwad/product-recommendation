@@ -1,0 +1,68 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm" id="main-navbar" style="backdrop-filter: blur(10px); background: rgba(255, 255, 255, 0.95) !important;">
+    <div class="container">
+        <a class="navbar-brand fw-bold text-primary" href="{{ url_for('index') }}" style="font-size: 1.4rem;">
+            <i class="fas fa-shopping-bag me-2"></i>ShopSmart
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav align-items-lg-center flex-grow-1">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'index' %}active fw-semibold{% endif %}" href="{{ url_for('index') }}">
+                        <i class="fas fa-home me-1"></i> Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'main' or request.endpoint == 'recommendations' %}active fw-semibold{% endif %}" href="{{ url_for('main') }}">
+                        <i class="fas fa-search me-1"></i> Search
+                    </a>
+                </li>
+                {% if session.get('user_id') %}
+                <li class="nav-item ms-lg-auto">
+                    <a class="nav-link position-relative {% if request.endpoint == 'cart' %}active fw-semibold{% endif %}" href="{{ url_for('cart') }}">
+                        <i class="fas fa-shopping-cart me-1"></i> My Cart
+                        <span id="cart-count" class="badge bg-primary rounded-pill cart-badge" data-cart-data='{% if session.get("cart") is mapping %}{{ session.get("cart") | tojson }}{% else %}{}{% endif %}'>{% if session.get('cart') is mapping %}{{ session.get('cart') | length }}{% else %}0{% endif %}</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'orders' %}active fw-semibold{% endif %}" href="{{ url_for('orders') }}">
+                        <i class="fas fa-box me-1"></i> My Orders
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if request.endpoint == 'profile' %}active fw-semibold{% endif %}" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-circle me-1"></i> {{ session.get('username', 'Account') }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="accountDropdown">
+                        <li><a class="dropdown-item" href="{{ url_for('profile') }}"><i class="fas fa-user me-2"></i> Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                    </ul>
+                </li>
+                {% else %}
+                <li class="nav-item ms-lg-auto">
+                    <a class="nav-link position-relative {% if request.endpoint == 'cart' %}active fw-semibold{% endif %}" href="{{ url_for('cart') }}">
+                        <i class="fas fa-shopping-cart me-1"></i> Cart
+                        <span id="cart-count" class="badge bg-primary rounded-pill cart-badge" data-cart-data='{% if session.get("cart") is mapping %}{{ session.get("cart") | tojson }}{% else %}{}{% endif %}'>{% if session.get('cart') is mapping %}{{ session.get('cart') | length }}{% else %}0{% endif %}</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-outline-primary btn-sm py-1 px-3 mx-1" href="#" data-bs-toggle="modal" data-bs-target="#signupModal">Sign Up</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-primary btn-sm py-1 px-3 text-white" href="#" data-bs-toggle="modal" data-bs-target="#signinModal">Sign In</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<style>
+.navbar .nav-link.active {
+    color: var(--primary) !important;
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 0.3rem;
+}
+</style>

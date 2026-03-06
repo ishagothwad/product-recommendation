@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Recommendations - ShopSmart{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Search -->
+    <section class="hero-search">
+        <h1>Find Your Perfect Match</h1>
+        <p class="mb-0 opacity-90">Search and get AI-powered product recommendations</p>
+        <form action="{{ url_for('recommendations') }}" method="post" class="search-form d-flex">
+            <input type="text" name="prod" class="form-control search-input" placeholder="Search for beauty, care, wellness…" value="{{ request.form.get('prod', '') }}" required aria-label="Search products">
+            <button type="submit" class="btn btn-dark search-btn">
+                <i class="fas fa-search"></i> Search
+            </button>
+        </form>
+    </section>
+
+    {% if message %}
+    <div class="alert alert-info" role="alert">
+        <i class="fas fa-info-circle me-2"></i>{{ message }}
+    </div>
+    {% endif %}
+
+    {% if content_based_rec is not none and not content_based_rec.empty %}
+    <h2 class="section-title">Recommended for You</h2>
+    <div class="row g-4">
+        {% for index, product in content_based_rec.iterrows() %}
+        {% set img_url = (product.get('ImageURL') or '').split('|')[0].strip() if product.get('ImageURL') else (random_product_image_urls[loop.index0] if random_product_image_urls is defined and loop.index0 < random_product_image_urls|length else 'https://via.placeholder.com/300x300?text=Product') %}
+        {% set price_val = random_price | default(99) %}
+        <div class="col-lg-3 col-md-4 col-sm-6">
+            <div class="card product-card h-100">
+                <div class="card-img-wrapper">
+                    <img src="{{ img_url }}" class="card-img-top" alt="{{ product['Name'] }}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x300?text=Product'">
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ truncate(product['Name'], 40) }}</h5>
+                    <p class="card-brand">{{ product['Brand'] }}</p>
+                    <p class="card-price mb-2">₹{{ price_val }}</p>
+                    <button type="button" class="btn btn-primary btn-add-cart add-to-cart"
+                        data-id="{{ index }}"
+                        data-name="{{ product['Name'] }}"
+                        data-brand="{{ product['Brand'] }}"
+                        data-price="{{ price_val }}"
+                        data-image="{{ img_url }}">
+                        <i class="fas fa-cart-plus me-1"></i> Add to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <i class="fas fa-search"></i>
+        <h3>Start Your Search</h3>
+        <p>Enter a product name or keyword above to get personalized recommendations.</p>
+        <a href="{{ url_for('index') }}" class="btn btn-primary">
+            <i class="fas fa-home me-2"></i> Back to Home
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

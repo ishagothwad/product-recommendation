@@ -1,0 +1,104 @@
+<!-- Sign Up Modal -->
+<div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="signupModalLabel">Create Account</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="signupForm" action="/signup" method="post">
+                    <input type="hidden" name="return_url" id="signupReturnUrl" value="{% if redirect_to == 'checkout' %}/checkout{% else %}{{ request.url }}{% endif %}">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" required autocomplete="username">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required autocomplete="email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required autocomplete="new-password" minlength="6">
+                        <small class="text-muted">Minimum 6 characters</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                        Create Account
+                    </button>
+                </form>
+                <div class="text-center mt-3">
+                    <small>Already have an account? <a href="#" data-bs-toggle="modal" data-bs-target="#signinModal" data-bs-dismiss="modal">Sign In</a></small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sign In Modal -->
+<div class="modal fade" id="signinModal" tabindex="-1" aria-labelledby="signinModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="signinModalLabel">Sign In</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="signinForm" action="/signin" method="post">
+                    <input type="hidden" name="return_url" id="signinReturnUrl" value="{% if redirect_to == 'checkout' %}/checkout{% else %}{{ request.url }}{% endif %}">
+                    <div class="mb-3">
+                        <label for="signinUsername" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="signinUsername" name="signinUsername" required autocomplete="username">
+                    </div>
+                    <div class="mb-3">
+                        <label for="signinPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="signinPassword" name="signinPassword" required autocomplete="current-password">
+                    </div>
+                    <div id="signinError" class="alert alert-danger d-none" role="alert"></div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                        Sign In
+                    </button>
+                </form>
+                <div class="text-center mt-3">
+                    <small>Don't have an account? <a href="#" data-bs-toggle="modal" data-bs-target="#signupModal" data-bs-dismiss="modal">Create one</a></small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="settingsModalLabel">Settings</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6 class="mb-3">Theme</h6>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="theme" id="defaultTheme" value="default" checked>
+                    <label class="form-check-label" for="defaultTheme">Default</label>
+                </div>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="theme" id="blackTheme" value="black">
+                    <label class="form-check-label" for="blackTheme">Dark</label>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="radio" name="theme" id="greenTheme" value="green">
+                    <label class="form-check-label" for="greenTheme">Green</label>
+                </div>
+                <hr>
+                <h6 class="mb-3">Zoom</h6>
+                <button type="button" class="btn btn-outline-primary btn-sm me-2" id="zoomIn">Zoom In</button>
+                <button type="button" class="btn btn-outline-secondary btn-sm" id="zoomOut">Zoom Out</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="applyTheme">Apply</button>
+            </div>
+        </div>
+    </div>
+</div>
